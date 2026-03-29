@@ -1,32 +1,49 @@
-let PASSWORD = "4953";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getDatabase, ref, push, onValue, remove } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
-let players = JSON.parse(localStorage.getItem("players") || "[]");
+const firebaseConfig = {
+  apiKey: "AIzaSyAS5FkoKGF1xOsYjWXf1fnPH49xIJaoPfg",
+  authDomain: "exeti-site.firebaseapp.com",
+  databaseURL: "https://exeti-site-default-rtdb.firebaseio.com",
+  projectId: "exeti-site",
+  storageBucket: "exeti-site.firebasestorage.app",
+  messagingSenderId: "669341180692",
+  appId: "1:669341180692:web:59f9936c175a653d3a5801"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+
+let PASSWORD = "4953";
+let players = [];
 
 let filter = "all";
 let searchText = "";
 
-/* SAVE */
-function save(){
-  localStorage.setItem("players", JSON.stringify(players));
-}
+/* realtime */
+onValue(ref(db, "players"), (snapshot) => {
+  players = [];
+  snapshot.forEach(child => {
+    players.push({
+      id: child.key,
+      ...child.val()
+    });
+  });
+  render();
+});
 
-/* RENDER */
+/* render */
 function render(){
   let list = document.getElementById("list");
   list.innerHTML = "";
 
   let filtered = players
-    .filter(p => {
-      if(filter === "all") return true;
-      return p.type === filter;
-    })
+    .filter(p => filter === "all" ? true : p.type === filter)
     .filter(p => p.name.toLowerCase().includes(searchText));
 
-  // если пусто — показываем всех
   if(filtered.length === 0) filtered = players;
 
   filtered.forEach((p,i)=>{
-
     let avatar = p.avatar || `https://mc-heads.net/avatar/${p.name}`;
 
     let card = document.createElement("div");
@@ -43,31 +60,27 @@ function render(){
   });
 }
 
-/* SEARCH FIX */
-let searchInput = document.querySelector(".search");
-
-searchInput.addEventListener("input", (e)=>{
+/* search */
+document.querySelector(".search").addEventListener("input", (e)=>{
   searchText = e.target.value.toLowerCase();
   render();
 });
 
-/* FILTER FIX */
+/* filter */
 function setFilter(f, el){
   filter = f;
-
   document.querySelectorAll(".filter").forEach(x=>x.classList.remove("active"));
   el.classList.add("active");
-
   render();
 }
 
-/* MENU */
+/* menu */
 function toggleMenu(){
   let menu = document.getElementById("menu");
   menu.style.display = menu.style.display === "flex" ? "none" : "flex";
 }
 
-/* ADMIN */
+/* admin */
 function openAdmin(){
   document.getElementById("admin").style.display = "flex";
 }
@@ -82,38 +95,24 @@ function login(){
   } else alert("wrong password");
 }
 
-/* ADD PLAYER */
+/* add */
 function addPlayer(){
   let name = document.getElementById("name").value;
   let avatar = document.getElementById("avatar").value;
   let type = document.getElementById("type").value;
   let region = document.getElementById("region").value;
 
-  if(!name) return alert("введи ник");
+  if(!name) return;
 
-  players.push({name, avatar, type, region});
-
-  save();
-  render();
+  push(ref(db, "players"), { name, avatar, type, region });
 }
 
-/* CLEAR */
+/* clear */
 function clearPlayers(){
-  players = [];
-  save();
-  render();
+  remove(ref(db, "players"));
 }
 
-/* TG COPY FIX */
+/* copy */
 function copyTG(){
-  let text = "https://t.me/yourchannel";
-
-  navigator.clipboard.writeText(text).then(()=>{
-    alert("Скопировано!");
-  }).catch(()=>{
-    alert("Ошибка копирования");
-  });
+  navigator.clipboard.writeText("https://t.me/yourchannel");
 }
-
-/* INIT */
-render();
