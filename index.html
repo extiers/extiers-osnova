@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EXETI</title>
+
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<!-- BURGER BUTTON -->
+<div class="burger" onclick="toggleMenu()">
+  <div></div><div></div><div></div>
+</div>
+
+<!-- MENU OVERLAY -->
+<div class="menu" id="menu">
+  <div class="menu-box">
+    <div class="close" onclick="toggleMenu()">✕</div>
+
+    <h2>EXETI</h2>
+
+    <div class="menu-item">🏆 Rankings</div>
+    <div class="menu-item" onclick="openAdmin()">🔐 ADMIN Panel</div>
+  </div>
+</div>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="logo">EXETI</div>
+  <input class="search" placeholder="Search..." oninput="render()">
+</div>
+
+<!-- FILTERS -->
+<div class="filters">
+  <div class="filter active" onclick="setFilter('all',this)">🏆 Overall</div>
+  <div class="filter" onclick="setFilter('nft',this)">💠 NFT</div>
+  <div class="filter" onclick="setFilter('km',this)">⚡ KM</div>
+  <div class="filter" onclick="setFilter('rich',this)">💎 RICH</div>
+</div>
+
+<!-- SERVER -->
+<div class="server">
+  <b>EXI CLUB</b>
+  <div class="server-ip" onclick="copyTG()">CHANNEL TG</div>
+</div>
+
+<!-- LIST -->
+<div class="container" id="list"></div>
+
+<!-- ADMIN -->
+<div class="admin" id="admin">
+  <div class="admin-box">
+    <h2>ADMIN Panel</h2>
+
+    <input id="pass" placeholder="Password">
+    <button onclick="login()">Войти</button>
+
+    <div id="adminContent" style="display:none;">
+
+      <input id="name" placeholder="Nickname">
+      <input id="avatar" placeholder="Avatar URL (ссылка)">
+      <select id="type">
+        <option value="all">Overall</option>
+        <option value="nft">NFT</option>
+        <option value="km">KM</option>
+        <option value="rich">RICH</option>
+      </select>
+
+      <select id="region">
+        <option value="na">NA</option>
+        <option value="eu">EU</option>
+      </select>
+
+      <button onclick="addPlayer()">Добавить</button>
+      <button onclick="clearPlayers()">Очистить всё</button>
+    </div>
+
+    <button onclick="closeAdmin()">Закрыть</button>
+  </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
