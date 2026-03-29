@@ -31,7 +31,7 @@ body::before {
   justify-content:center;
   align-items:center;
   gap:4px;
-  z-index:1000;
+  z-index:2100;
   cursor:pointer;
 }
 
@@ -49,6 +49,7 @@ body::before {
   backdrop-filter:blur(10px);
   display:none;
   justify-content:flex-end;
+  z-index:2000;
 }
 
 .menu-box {
