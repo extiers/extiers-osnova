@@ -1,1 +1,0 @@
-# extiers-osnova
